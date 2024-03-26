@@ -104,6 +104,8 @@ class CountryCollector(BaseCollector):
                         subregion=item["subregion"],
                         timezones=item["timezones"],
                         area=item["area"],
+                        latitude=item["latitude"],
+                        longitude=item["longitude"],
                     )
                 )
 
@@ -220,6 +222,7 @@ class WeatherCollector(BaseCollector):
                 humidity=result["main"]["humidity"],
                 wind_speed=result["wind"]["speed"],
                 description=result["weather"][0]["description"],
+                visibility=result["visibility"],
             )
 
         return None

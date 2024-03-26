@@ -95,6 +95,8 @@ class CountryDTO(BaseModel):
                 "UTC+02:00",
             ],
             area=1580.0,
+            latitude=60.116667,
+            longitude=19.9,
         )
     """
 
@@ -109,6 +111,8 @@ class CountryDTO(BaseModel):
     subregion: str
     timezones: list[str]
     area: Optional[float]
+    latitude: Optional[float]
+    longitude: Optional[float]
 
 
 class CurrencyRatesDTO(BaseModel):
@@ -143,6 +147,7 @@ class WeatherInfoDTO(BaseModel):
             humidity=54,
             wind_speed=4.63,
             description="scattered clouds",
+            visibility=10000,
         )
     """
 
@@ -151,6 +156,7 @@ class WeatherInfoDTO(BaseModel):
     humidity: int
     wind_speed: float
     description: str
+    visibility: int
 
 
 class LocationInfoDTO(BaseModel):
