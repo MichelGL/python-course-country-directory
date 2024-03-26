@@ -103,6 +103,7 @@ class CountryCollector(BaseCollector):
                         population=item["population"],
                         subregion=item["subregion"],
                         timezones=item["timezones"],
+                        area=item["area"],
                     )
                 )
 

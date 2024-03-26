@@ -3,6 +3,7 @@
 """
 
 from pydantic import Field, BaseModel
+from typing import Optional
 
 
 class HashableBaseModel(BaseModel):
@@ -93,6 +94,7 @@ class CountryDTO(BaseModel):
             timezones=[
                 "UTC+02:00",
             ],
+            area=1580.0,
         )
     """
 
@@ -106,6 +108,7 @@ class CountryDTO(BaseModel):
     population: int
     subregion: str
     timezones: list[str]
+    area: Optional[float]
 
 
 class CurrencyRatesDTO(BaseModel):

@@ -36,6 +36,7 @@ class Renderer:
             f"Население страны: {await self._format_population()} чел.",
             f"Курсы валют: {await self._format_currency_rates()}",
             f"Погода: {self.location_info.weather.temp} °C",
+            f"Площадь: {self.location_info.location.area} км2",
         )
 
     async def _format_languages(self) -> str:
