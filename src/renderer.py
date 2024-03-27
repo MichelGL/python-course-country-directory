@@ -7,6 +7,8 @@ from decimal import ROUND_HALF_UP, Decimal
 from collectors.models import LocationInfoDTO
 from prettytable import PrettyTable
 import datetime
+from textwrap import fill
+from typing import Optional
 
 class Renderer:
     """
@@ -32,6 +34,7 @@ class Renderer:
         country_tab = PrettyTable(["Поле", "Значение"], align="l")
         capital_tab = PrettyTable(["Поле", "Значение"], align="l")
         weather_tab = PrettyTable(["Поле", "Значение"], align="l")
+        news_tab = PrettyTable( ["Название", "Автор", "Описание", "Опубликовано", "Ссылка"], align="l")
 
         country_tab.add_row(["Страна", f"{self.location_info.location.name}"])
         country_tab.add_row(["Площадь", f"{self.location_info.location.area} км²"])
@@ -52,26 +55,21 @@ class Renderer:
         weather_tab.add_row(["Видимость", f"{self.location_info.weather.visibility}"])
         weather_tab.add_row(["Скорость ветра", f"{self.location_info.weather.wind_speed} м/с"])
 
-        return country_tab, capital_tab, weather_tab
+        for news_entry in self.location_info.news:
+            news_tab.add_row(
+                [
+                    fill(news_entry.title, width=50),
+                    news_entry.author,
+                    fill(await self._format_description(news_entry.description), width=50),
+                    fill(
+                        await self._format_publication_date(news_entry.publishedAt),
+                        width=10,
+                    ),
+                    fill(news_entry.url, width=50),
+                ]
+            )
 
-        # return (
-        #     f"Страна: {self.location_info.location.name}",
-        #     f"Столица: {self.location_info.location.capital}",
-        #     f"Регион: {self.location_info.location.subregion}",
-        #     f"Языки: {await self._format_languages()}",
-        #     f"Население страны: {await self._format_population()} чел.",
-        #     f"Курсы валют: {await self._format_currency_rates()}",
-        #     f"Площадь страны: {self.location_info.location.area} км2",
-        #     f"Широта столицы: {self.location_info.location.latitude}",
-        #     f"Долгота столицы: {self.location_info.location.longitude}",
-        #     f"Температура: {self.location_info.weather.temp} °C",
-        #     f"Погода: {self.location_info.weather.description}",
-        #     f"Влажность: {self.location_info.weather.humidity}%",
-        #     f"Видимость: {self.location_info.weather.visibility}",
-        #     f"Скорость ветра: {self.location_info.weather.wind_speed} м/с",
-        #     f"Время в столице: {await self._format_current_time()}",
-        #     f"Часовой пояс столицы: {await self._get_timezone()}",
-        # )
+        return country_tab, capital_tab, weather_tab, news_tab
 
     async def _format_languages(self) -> str:
         """
@@ -124,3 +122,24 @@ class Renderer:
             seconds=self.location_info.weather.timezone
         )
         return dt.strftime("%X, %x")
+
+    async def _format_publication_date(self, date: str) -> str:
+        """
+        Форматирование даты публикации новости.
+        :return:
+        """
+        dt = datetime.datetime.strptime(
+            date, "%Y-%m-%dT%H:%M:%SZ"
+        ) + datetime.timedelta(seconds=self.location_info.weather.timezone)
+        return dt.strftime("%X, %x")
+
+    @staticmethod
+    async def _format_description(description: Optional[str]) -> str:
+        """
+        Форматирование описания новости.
+        :return:
+        """
+        if description is None:
+            return "-"
+        return description
+
