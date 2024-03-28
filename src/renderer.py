@@ -2,13 +2,15 @@
 Функции для формирования выходной информации.
 """
 
-from decimal import ROUND_HALF_UP, Decimal
-
-from collectors.models import LocationInfoDTO
-from prettytable import PrettyTable
 import datetime
+from decimal import ROUND_HALF_UP, Decimal
 from textwrap import fill
 from typing import Optional
+
+from prettytable import PrettyTable
+
+from collectors.models import LocationInfoDTO
+
 
 class Renderer:
     """
@@ -34,7 +36,9 @@ class Renderer:
         country_tab = PrettyTable(["Поле", "Значение"], align="l")
         capital_tab = PrettyTable(["Поле", "Значение"], align="l")
         weather_tab = PrettyTable(["Поле", "Значение"], align="l")
-        news_tab = PrettyTable( ["Название", "Автор", "Описание", "Опубликовано", "Ссылка"], align="l")
+        news_tab = PrettyTable(
+            ["Название", "Автор", "Описание", "Опубликовано", "Ссылка"], align="l"
+        )
 
         country_tab.add_row(["Страна", f"{self.location_info.location.name}"])
         country_tab.add_row(["Площадь", f"{self.location_info.location.area} км²"])
@@ -53,14 +57,18 @@ class Renderer:
         weather_tab.add_row(["Погода", f"{self.location_info.weather.description}"])
         weather_tab.add_row(["Влажность", f"{self.location_info.weather.humidity}%"])
         weather_tab.add_row(["Видимость", f"{self.location_info.weather.visibility}"])
-        weather_tab.add_row(["Скорость ветра", f"{self.location_info.weather.wind_speed} м/с"])
+        weather_tab.add_row(
+            ["Скорость ветра", f"{self.location_info.weather.wind_speed} м/с"]
+        )
 
         for news_entry in self.location_info.news:
             news_tab.add_row(
                 [
                     fill(news_entry.title, width=50),
                     news_entry.author,
-                    fill(await self._format_description(news_entry.description), width=50),
+                    fill(
+                        await self._format_description(news_entry.description), width=50
+                    ),
                     fill(
                         await self._format_publication_date(news_entry.publishedAt),
                         width=10,
@@ -118,20 +126,20 @@ class Renderer:
         Форматирование информации о времени.
         :return:
         """
-        dt = datetime.datetime.now() + datetime.timedelta(
+        date_time = datetime.datetime.now() + datetime.timedelta(
             seconds=self.location_info.weather.timezone
         )
-        return dt.strftime("%X, %x")
+        return date_time.strftime("%X, %x")
 
     async def _format_publication_date(self, date: str) -> str:
         """
         Форматирование даты публикации новости.
         :return:
         """
-        dt = datetime.datetime.strptime(
+        date_time = datetime.datetime.strptime(
             date, "%Y-%m-%dT%H:%M:%SZ"
         ) + datetime.timedelta(seconds=self.location_info.weather.timezone)
-        return dt.strftime("%X, %x")
+        return date_time.strftime("%X, %x")
 
     @staticmethod
     async def _format_description(description: Optional[str]) -> str:
@@ -142,4 +150,3 @@ class Renderer:
         if description is None:
             return "-"
         return description
-

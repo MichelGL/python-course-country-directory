@@ -7,7 +7,6 @@ from collectors.collector import WeatherCollector
 from collectors.models import LocationDTO
 
 
-
 @pytest.mark.asyncio
 class TestWeatherCollector:
     """

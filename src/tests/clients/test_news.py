@@ -25,4 +25,6 @@ class TestClientNews:
     async def test_get_news(self, mocker, client):
         mocker.patch("clients.news.NewsClient._request")
         await client.get_news("test")
-        client._request.assert_called_with(f"{self.base_url}?pageSize=3&country=test&apiKey={API_KEY_NEWSAPI}")
+        client._request.assert_called_with(
+            f"{self.base_url}?pageSize=3&country=test&apiKey={API_KEY_NEWSAPI}"
+        )

@@ -231,6 +231,7 @@ class WeatherCollector(BaseCollector):
 
         return None
 
+
 class NewsCollector(BaseCollector):
     """
     Сбор информации о новостях стран.
@@ -295,6 +296,7 @@ class NewsCollector(BaseCollector):
                 )
             return result_list
         return None
+
 
 class Collectors:
     @staticmethod
