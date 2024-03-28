@@ -2,6 +2,7 @@
 Описание моделей данных (DTO).
 """
 
+from typing import Optional
 from pydantic import Field, BaseModel
 
 
@@ -93,6 +94,9 @@ class CountryDTO(BaseModel):
             timezones=[
                 "UTC+02:00",
             ],
+            area=1580.0,
+            latitude=60.116667,
+            longitude=19.9,
         )
     """
 
@@ -106,6 +110,9 @@ class CountryDTO(BaseModel):
     population: int
     subregion: str
     timezones: list[str]
+    area: Optional[float]
+    latitude: Optional[float]
+    longitude: Optional[float]
 
 
 class CurrencyRatesDTO(BaseModel):
@@ -140,6 +147,8 @@ class WeatherInfoDTO(BaseModel):
             humidity=54,
             wind_speed=4.63,
             description="scattered clouds",
+            visibility=10000,
+            timezone=0,
         )
     """
 
@@ -148,6 +157,31 @@ class WeatherInfoDTO(BaseModel):
     humidity: int
     wind_speed: float
     description: str
+    visibility: int
+    timezone: int
+
+
+class NewsInfoDTO(BaseModel):
+    """
+    Модель данных о новостях.
+
+    .. code-block::
+
+        NewsInfoDTO(
+            "author"="BBC News",
+            "title"="What does the King's diagnosis mean for William, Harry and the other royals?",
+            "description"="It's been a bleak midwinter for the Royal Family.
+            Will the King's health news help to bring them together?",
+            "url"="https://www.bbc.co.uk/news/uk-68211941",
+            "publishedAt"="2024-02-06T12:37:22.3818701Z",
+        )
+    """
+
+    author: str
+    title: str
+    description: Optional[str]
+    url: str
+    publishedAt: str
 
 
 class LocationInfoDTO(BaseModel):
@@ -201,3 +235,4 @@ class LocationInfoDTO(BaseModel):
     location: CountryDTO
     weather: WeatherInfoDTO
     currency_rates: dict[str, float]
+    news: list[NewsInfoDTO]
